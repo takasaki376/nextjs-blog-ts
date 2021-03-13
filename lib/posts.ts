@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import remark from "remark";
 import html from "remark-html";
+import { POST } from "./type";
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
@@ -50,7 +51,10 @@ export function getAllPostIds() {
   });
 }
 
-export async function getPostData(id) {
+export async function getPostData(id?: string) {
+  if (!id) {
+    return null;
+  }
   const fullPath = path.join(postsDirectory, `${id}.md`);
   const fileContents = fs.readFileSync(fullPath, "utf8");
 
@@ -64,9 +68,12 @@ export async function getPostData(id) {
   const contentHtml = processedContent.toString();
 
   // データを id および contentHtml と組み合わせる
-  return {
-    id,
-    contentHtml,
-    ...matterResult.data,
+  const postsData: POST = {
+    id: id,
+    contentHtml: contentHtml,
+    title: matterResult.data.title,
+    date: matterResult.data.date,
   };
+
+  return postsData;
 }
