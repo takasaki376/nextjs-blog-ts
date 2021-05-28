@@ -1,6 +1,14 @@
 # typescrippt
 
+```
 yarn add -D typescript @types/react @types/react-dom @types/node
+```
+
+# axios
+
+```
+yarn add axios
+```
 
 # 拡張子変更
 
@@ -9,7 +17,7 @@ JSX 使っているなら拡張子を"tsx"に変更する
 
 # 開発サーバ起動
 
-yarn dev
+`yarn dev`
 
 # 型の定義
 
@@ -19,4 +27,4 @@ yarn dev
 
 # ビルドする
 
-yarn build
+`yarn build`

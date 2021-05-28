@@ -1,13 +1,14 @@
 import Layout from "../../components/layout";
-import { getAllPostIds, getPostData } from "../../lib/posts";
+import { getAllPostIds, getPostData } from "../../lib/blogApi";
 import Head from "next/head";
 import Date from "../../components/date";
 import utilStyles from "../../styles/utils.module.css";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { POST } from "../../lib/type";
+import { READ_BLOG } from "../../lib/type";
+import { VFC } from "react";
 
 interface Props {
-  postData: POST | null;
+  postData: READ_BLOG | null;
 }
 type PathProps = { id: string };
 
@@ -23,14 +24,14 @@ export const getStaticProps: GetStaticProps<Props, PathProps> = async ({
 };
 
 export const getStaticPaths: GetStaticPaths<PathProps> = async () => {
-  const paths = getAllPostIds();
+  const id = await getAllPostIds();
   return {
-    paths,
+    paths: id,
     fallback: false,
   };
 };
 
-const Post: React.FC<Props> = ({ postData }: Props) => {
+const Post: VFC<Props> = ({ postData }: Props) => {
   return (
     <Layout>
       <Head>
@@ -39,9 +40,9 @@ const Post: React.FC<Props> = ({ postData }: Props) => {
       <article>
         <h1 className={utilStyles.headingXl}>{postData.title}</h1>
         <div className={utilStyles.lightText}>
-          <Date dateString={postData.date} />
+          <Date dateString={postData.created_at} />
         </div>
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+        <div>{postData.content}</div>
       </article>
     </Layout>
   );

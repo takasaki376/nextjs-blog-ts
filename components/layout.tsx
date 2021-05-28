@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "./layout.module.css";
 import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
-import React, { ReactNode } from "react";
+import { ReactNode, VFC } from "react";
 
 const name = "Your Name";
 export const siteTitle = "Next.js Sample Website";
@@ -12,7 +12,7 @@ interface Props {
   home?: boolean;
 }
 
-const Layout: React.FC<Props> = ({ children, home = false }) => {
+const Layout: VFC<Props> = ({ children, home = false }) => {
   return (
     <div className={styles.container}>
       <Head>

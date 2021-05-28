@@ -1,14 +1,14 @@
 import Head from "next/head";
-import Layout, { siteTitle } from "../components/layout";
+import Layout from "../components/layout";
 import utilStyles from "../styles/utils.module.css";
-import { getSortedPostsData } from "../lib/posts";
+import { getSortedPostsData } from "../lib/blogApi";
 import Link from "next/link";
 import Date from "../components/date";
-import { GetStaticProps } from "next";
-import { POST } from "../lib/type";
+import { GetStaticProps, NextPage } from "next";
+import { READ_BLOG } from "../lib/type";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const allPostsData = getSortedPostsData();
+  const allPostsData = await getSortedPostsData();
   return {
     props: {
       allPostsData,
@@ -17,10 +17,10 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 interface Props {
-  allPostsData: POST[];
+  allPostsData: READ_BLOG[];
 }
 
-const Home = ({ allPostsData }: Props) => {
+const Home: NextPage<Props> = ({ allPostsData }) => {
   return (
     <Layout home>
       <Head>…</Head>
@@ -28,14 +28,14 @@ const Home = ({ allPostsData }: Props) => {
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
         <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, date, title }) => (
-            <li className={utilStyles.listItem} key={id}>
-              <Link href={`/posts/${id}`}>
-                <a>{title}</a>
+          {allPostsData.map((blog) => (
+            <li className={utilStyles.listItem} key={blog.id}>
+              <Link href={`/posts/${blog.id}`}>
+                <a>{blog.title}</a>
               </Link>
               <br />
               <small className={utilStyles.lightText}>
-                <Date dateString={date} />
+                <Date dateString={blog.created_at} />
               </small>
             </li>
           ))}

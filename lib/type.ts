@@ -1,6 +1,7 @@
-export interface POST {
+export type READ_BLOG = {
   id: string;
   title: string;
-  date: string;
-  contentHtml: string;
-}
+  content: string;
+  created_at: string;
+  updated_at: string;
+};
