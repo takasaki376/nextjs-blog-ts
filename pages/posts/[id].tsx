@@ -7,9 +7,9 @@ import { GetStaticProps, GetStaticPaths } from "next";
 import { READ_BLOG } from "../../lib/type";
 import { VFC } from "react";
 
-interface Props {
+type Props = {
   postData: READ_BLOG | null;
-}
+};
 type PathProps = { id: string };
 
 export const getStaticProps: GetStaticProps<Props, PathProps> = async ({

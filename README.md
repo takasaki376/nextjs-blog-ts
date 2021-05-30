@@ -10,6 +10,18 @@ yarn add -D typescript @types/react @types/react-dom @types/node
 yarn add axios
 ```
 
+## SWR のインストール
+
+```
+yarn add swr
+```
+
+## classcat のインストール
+
+```
+yarn add classcat
+```
+
 # 拡張子変更
 
 JSX 使っているなら拡張子を"tsx"に変更する

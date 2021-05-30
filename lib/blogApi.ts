@@ -9,6 +9,15 @@ export const blogGet = (url) =>
 // PKで検索
 export const blogGetPk = (url) =>
   axios.get<READ_BLOG>(url).then((res) => res.data);
+// 削除
+export const blogDelete = (url, id) =>
+  axios.delete(`${url}${id}/`).then((res) => res);
+// 新規登録
+export const blogPost = (url, blog) =>
+  axios.post<READ_BLOG>(url, blog).then((res) => res.data);
+// 更新
+export const blogPut = (url, id, blog) =>
+  axios.put<READ_BLOG>(`${url}${id}/`, blog).then((res) => res.data);
 
 // ------------------------------------
 // ブログデータの全件取得
