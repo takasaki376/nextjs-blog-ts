@@ -1,11 +1,19 @@
 import Layout from "../../components/layout";
-import { getAllPostIds, getPostData } from "../../lib/blogApi";
+import {
+  apiUrl,
+  blogGetPk,
+  getAllPostIds,
+  getPostData,
+} from "../../lib/blogApi";
 import Head from "next/head";
 import Date from "../../components/date";
 import utilStyles from "../../styles/utils.module.css";
 import { GetStaticProps, GetStaticPaths } from "next";
 import { READ_BLOG } from "../../lib/type";
 import { VFC } from "react";
+import useSWR from "swr";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 type Props = {
   postData: READ_BLOG | null;
@@ -32,17 +40,32 @@ export const getStaticPaths: GetStaticPaths<PathProps> = async () => {
 };
 
 const Post: VFC<Props> = ({ postData }: Props) => {
+  const router = useRouter();
+  const { data: blog, mutate } = useSWR(
+    `${apiUrl}${postData?.id}/`,
+    blogGetPk,
+    {
+      initialData: postData,
+    }
+  );
+  useEffect(() => {
+    mutate();
+  }, []);
+
+  if (router.isFallback || !blog) {
+    return <div>Loading...</div>;
+  }
   return (
     <Layout>
       <Head>
-        <title>{postData.title}</title>
+        <title>{blog.title}</title>
       </Head>
       <article>
-        <h1 className={utilStyles.headingXl}>{postData.title}</h1>
+        <h1 className={utilStyles.headingXl}>{blog.title}</h1>
         <div className={utilStyles.lightText}>
-          <Date dateString={postData.created_at} />
+          <Date dateString={blog.created_at} />
         </div>
-        <div>{postData.content}</div>
+        <div>{blog.content}</div>
       </article>
     </Layout>
   );

@@ -1,22 +1,22 @@
 import axios from "axios";
-import { READ_BLOG } from "./type";
+import { READ_BLOG, POST_BLOG } from "./type";
 
 export const apiUrl = `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/blog/`;
 
 // 検索
-export const blogGet = (url) =>
+export const blogGet = (url: string) =>
   axios.get<READ_BLOG[]>(url).then((res) => res.data);
 // PKで検索
-export const blogGetPk = (url) =>
+export const blogGetPk = (url: string) =>
   axios.get<READ_BLOG>(url).then((res) => res.data);
 // 削除
-export const blogDelete = (url, id) =>
+export const blogDelete = (url: string, id: string) =>
   axios.delete(`${url}${id}/`).then((res) => res);
 // 新規登録
-export const blogPost = (url, blog) =>
+export const blogPost = (url: string, blog: POST_BLOG) =>
   axios.post<READ_BLOG>(url, blog).then((res) => res.data);
 // 更新
-export const blogPut = (url, id, blog) =>
+export const blogPut = (url: string, id: string, blog: POST_BLOG) =>
   axios.put<READ_BLOG>(`${url}${id}/`, blog).then((res) => res.data);
 
 // ------------------------------------

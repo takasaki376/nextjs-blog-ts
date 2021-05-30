@@ -15,7 +15,7 @@ import { GetStaticProps, NextPage } from "next";
 import { READ_BLOG, POST_BLOG } from "../lib/type";
 import { TrashIcon } from "../components/TrashIcon";
 import { UpdateIcon } from "../components/UpdateIcon";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import useSWR from "swr";
 import { TextField } from "../components/TextField";
 import { Button } from "../components/Button";
@@ -76,14 +76,14 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
 
   // ------------------------
   // 削除処理
-  const handleDeleteClick = async (id) => {
+  const handleDeleteClick = async (id: string) => {
     await blogDelete(apiUrl, id);
     mutate();
   };
 
   // ------------------------
   // 更新画面に切り替え
-  const handleUpdateForm = (id, title, content) => {
+  const handleUpdateForm = (id: string, title: string, content: string) => {
     setInputForm(true);
     setUpdateBlog({
       id: id,
