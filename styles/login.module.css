@@ -145,8 +145,11 @@
   font-weight: 500;
   --tw-text-opacity: 1;
   color: rgba(79, 70, 229, var(--tw-text-opacity));
+<<<<<<< HEAD
   background-color: transparent;
   border-color: transparent;
+=======
+>>>>>>> 0978b3c (💄 login)
 }
 .text:hover {
   --tw-text-opacity: 1;
