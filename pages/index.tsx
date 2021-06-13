@@ -12,14 +12,17 @@ import {
 import Link from "next/link";
 import Date from "../components/date";
 import { GetStaticProps, NextPage } from "next";
-import { READ_BLOG, POST_BLOG } from "../lib/type";
+import { READ_BLOG, POST_BLOG } from "../lib/types";
 import { TrashIcon } from "../components/TrashIcon";
 import { UpdateIcon } from "../components/UpdateIcon";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import useSWR from "swr";
 import { TextField } from "../components/TextField";
 import { Button } from "../components/Button";
 import { PlusIcon } from "../components/PlusIcon";
+import { fetchAsyncAuth } from "../lib/loginSlice";
+import { AppDispatch } from "../lib/store";
+import { useDispatch } from "react-redux";
 
 export const getStaticProps: GetStaticProps = async () => {
   const allPostsData = await getSortedPostsData();
@@ -41,6 +44,16 @@ const initialState: POST_BLOG = {
 };
 
 const Home: NextPage<Props> = ({ allPostsData }) => {
+  const dispatch: AppDispatch = useDispatch();
+
+  // ログイン済かチェックする
+  useEffect(() => {
+    const loginCheck = async () => {
+      await dispatch(fetchAsyncAuth());
+    };
+    loginCheck();
+  }, []);
+
   // ------------------------
   // 全件検索処理
   // SSGで取得した後に追加・更新・削除されているため差分を取得する。

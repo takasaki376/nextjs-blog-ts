@@ -9,7 +9,7 @@ import Head from "next/head";
 import Date from "../../components/date";
 import utilStyles from "../../styles/utils.module.css";
 import { GetStaticProps, GetStaticPaths } from "next";
-import { READ_BLOG } from "../../lib/type";
+import { READ_BLOG } from "../../lib/types";
 import { VFC } from "react";
 import useSWR from "swr";
 import { useEffect } from "react";

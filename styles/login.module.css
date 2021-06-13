@@ -146,10 +146,15 @@
   --tw-text-opacity: 1;
   color: rgba(79, 70, 229, var(--tw-text-opacity));
 <<<<<<< HEAD
+<<<<<<< HEAD
   background-color: transparent;
   border-color: transparent;
 =======
 >>>>>>> 0978b3c (💄 login)
+=======
+  background-color: transparent;
+  border-color: transparent;
+>>>>>>> acf22d5 (API変更)
 }
 .text:hover {
   --tw-text-opacity: 1;
