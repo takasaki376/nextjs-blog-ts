@@ -145,6 +145,8 @@
   font-weight: 500;
   --tw-text-opacity: 1;
   color: rgba(79, 70, 229, var(--tw-text-opacity));
+  background-color: transparent;
+  border-color: transparent;
 }
 .text:hover {
   --tw-text-opacity: 1;

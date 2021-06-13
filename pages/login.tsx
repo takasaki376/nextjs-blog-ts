@@ -1,7 +1,68 @@
 import { NextPage } from "next";
 import styles from "../styles/login.module.css";
 
-const Signin: NextPage = () => {
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "../lib/store";
+import {
+  editAuthen,
+  fetchAsyncLogin,
+  fetchAsyncRegister,
+  selectAuthen,
+  selectErrorLogin,
+} from "../lib/loginSlice";
+import { FormHTMLAttributes, InputHTMLAttributes, useState } from "react";
+import { useRouter } from "next/router";
+
+const Login: NextPage = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
+
+  const authen = useSelector(selectAuthen);
+  const [isLoginView, setIsLoginView] = useState<boolean>(false);
+
+  // ユーザ名 入力時
+  const handleUsername: InputHTMLAttributes<HTMLInputElement>["onChange"] = (
+    e
+  ) => {
+    dispatch(
+      editAuthen({
+        authen: { ...authen, username: String(e.currentTarget.value) },
+      })
+    );
+  };
+  // パスワード入力時
+  const handlePassword: InputHTMLAttributes<HTMLInputElement>["onChange"] = (
+    e
+  ) => {
+    dispatch(
+      editAuthen({
+        authen: { ...authen, password: String(e.currentTarget.value) },
+      })
+    );
+  };
+  // ********************
+  // ログイン処理
+  const handleLoginSubmit: FormHTMLAttributes<HTMLFormElement>["onSubmit"] =
+    async (e) => {
+      // ボタンクリック時に画面のリフレッシュをしないようにする
+      e.preventDefault();
+      if (isLoginView) {
+        // 新規ユーザ登録
+        const result = await dispatch(fetchAsyncRegister(authen));
+        // ユーザ登録完了後に、トークンを取得して、タスク一覧へ遷移する
+        if (fetchAsyncRegister.fulfilled.match(result)) {
+          await dispatch(fetchAsyncLogin(authen));
+          router.push("/");
+        }
+      } else {
+        // 登録済ユーザのトークンを取得して、タスク一覧へ遷移する
+        const result = await dispatch(fetchAsyncLogin(authen));
+        if (fetchAsyncLogin.fulfilled.match(result)) {
+          router.push("/");
+        }
+      }
+    };
+
   return (
     <div className={styles.root}>
       <div className={styles.header}>
@@ -15,15 +76,17 @@ const Signin: NextPage = () => {
         </div>
       </div>
 
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleLoginSubmit}>
         <div className={styles.inputFrame}>
           <div>
-            <label className={styles.label}>Email address</label>
+            <label className={styles.label}>User Name</label>
             <input
               type="text"
               required
               className={styles.inputuser}
-              placeholder="Email address"
+              placeholder="User Name"
+              value={authen.username}
+              onChange={handleUsername}
             />
           </div>
           <div>
@@ -33,30 +96,37 @@ const Signin: NextPage = () => {
               required
               className={styles.inputpassward}
               placeholder="Password"
+              value={authen.password}
+              onChange={handlePassword}
             />
           </div>
         </div>
 
         <div className={styles.modeFrame}>
           <div className={styles.textFrame}>
-            <a href="#" className={styles.text}>
-              ログイン
-            </a>
+            <button
+              className={styles.text}
+              onClick={() => {
+                setIsLoginView(!isLoginView);
+              }}
+            >
+              {isLoginView ? "ログイン画面へ戻る" : "アカウントを新規登録する"}
+            </button>
           </div>
           <div className={styles.textFrame}>
-            <a href="#" className={styles.text}>
+            <button className={styles.text}>
               パスワードを忘れた場合はこちら
-            </a>
+            </button>
           </div>
         </div>
 
         <div>
           <button type="submit" className={styles.button}>
-            Sign in
+            {isLoginView ? "新規登録" : "ログイン"}
           </button>
         </div>
       </form>
     </div>
   );
 };
-export default Signin;
+export default Login;

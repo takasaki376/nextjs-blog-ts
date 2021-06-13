@@ -1,5 +1,5 @@
 import axios from "axios";
-import { READ_BLOG, POST_BLOG } from "./type";
+import { READ_BLOG, POST_BLOG } from "./types";
 
 export const apiUrl = `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/blog/`;
 
@@ -11,13 +11,31 @@ export const blogGetPk = (url: string) =>
   axios.get<READ_BLOG>(url).then((res) => res.data);
 // 削除
 export const blogDelete = (url: string, id: string) =>
-  axios.delete(`${url}${id}/`).then((res) => res);
+  axios
+    .delete(`${url}${id}/`, {
+      headers: {
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    })
+    .then((res) => res);
 // 新規登録
 export const blogPost = (url: string, blog: POST_BLOG) =>
-  axios.post<READ_BLOG>(url, blog).then((res) => res.data);
+  axios
+    .post<READ_BLOG>(url, blog, {
+      headers: {
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    })
+    .then((res) => res.data);
 // 更新
 export const blogPut = (url: string, id: string, blog: POST_BLOG) =>
-  axios.put<READ_BLOG>(`${url}${id}/`, blog).then((res) => res.data);
+  axios
+    .put<READ_BLOG>(`${url}${id}/`, blog, {
+      headers: {
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    })
+    .then((res) => res.data);
 
 // ------------------------------------
 // ブログデータの全件取得
