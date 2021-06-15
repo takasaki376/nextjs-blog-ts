@@ -1,4 +1,9 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction,
+  createAsyncThunk,
+  Action,
+} from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { LOGIN_STATE, AUTH, JWT, USER } from "./types";
 import axios from "axios";
@@ -43,7 +48,7 @@ export const fetchAsyncRegister = createAsyncThunk(
 
 // ログイン中のチェック
 export const fetchAsyncAuth = createAsyncThunk("auth/jwt/verify/", async () => {
-  const res = await axios.get<USER[]>(
+  const res = await axios.get<USER>(
     `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/users/me/`,
     {
       headers: {
@@ -67,8 +72,9 @@ export const initialState: LOGIN_STATE = {
     errorMessage: "",
   },
   loginUser: {
-    username: "",
+    email: "",
     id: 0,
+    username: "",
   },
 };
 
@@ -84,6 +90,11 @@ export const loginSlice = createSlice({
       }>
     ) {
       state.authen = action.payload.authen;
+    },
+    editLogout(state) {
+      localStorage.removeItem("localJWT");
+      state.isLoggedIn = false;
+      state.loginUser = {} as USER;
     },
   },
   extraReducers: (builder) => {
@@ -125,24 +136,32 @@ export const loginSlice = createSlice({
         errorMessage: action.error.message,
       };
     });
-    // トークン作成成功
-    builder.addCase(fetchAsyncAuth.fulfilled, (state) => {
-      state.isLoggedIn = true;
-    });
-    // ログイン中のチェック
+    // ユーザ取得成功
+    builder.addCase(
+      fetchAsyncAuth.fulfilled,
+      (state, action: PayloadAction<USER>) => {
+        state.isLoggedIn = true;
+        state.loginUser.id = action.payload.id;
+        state.loginUser.username = action.payload.username;
+        state.loginUser.email = action.payload.email;
+      }
+    );
+    // ユーザ取得失敗
     builder.addCase(fetchAsyncAuth.rejected, (state) => {
       console.log("認証期限切れ");
       localStorage.removeItem("localJWT");
       state.isLoggedIn = false;
+      state.loginUser = {} as USER;
     });
   },
 });
 
-export const { editAuthen } = loginSlice.actions;
+export const { editAuthen, editLogout } = loginSlice.actions;
 
 export const selectAuthen = (state: RootState) => state.login.authen;
 export const selectIsLoading = (state: RootState) => state.login.isLoading;
 export const selectIsLoggedIn = (state: RootState) => state.login.isLoggedIn;
 export const selectErrorLogin = (state: RootState) => state.login.error;
+export const selectLoginUser = (state: RootState) => state.login.loginUser;
 
 export default loginSlice.reducer;

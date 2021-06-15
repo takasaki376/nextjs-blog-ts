@@ -4,15 +4,15 @@ import utilStyles from "../styles/utils.module.css";
 import Link from "next/link";
 import { ReactNode, VFC } from "react";
 
-const name = "Your Name";
 export const siteTitle = "Next.js Sample Website";
 
 interface Props {
   children: ReactNode;
   home?: boolean;
+  name: string;
 }
 
-const Layout: VFC<Props> = ({ children, home = false }) => {
+const Layout: VFC<Props> = ({ children, home = false, name }) => {
   return (
     <div className={styles.container}>
       <Head>
