@@ -4,6 +4,8 @@ export type READ_BLOG = {
   content: string;
   created_at: string;
   updated_at: string;
+  owner: number;
+  username: string;
 };
 
 export type POST_BLOG = {
@@ -30,8 +32,9 @@ export interface JWT {
 }
 
 export interface USER {
-  username: string;
+  email: string;
   id: number;
+  username: string;
 }
 export interface LOGIN_STATE {
   authen: AUTH;

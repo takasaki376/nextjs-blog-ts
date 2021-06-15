@@ -15,14 +15,20 @@ import { GetStaticProps, NextPage } from "next";
 import { READ_BLOG, POST_BLOG } from "../lib/types";
 import { TrashIcon } from "../components/TrashIcon";
 import { UpdateIcon } from "../components/UpdateIcon";
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState, useEffect, MouseEventHandler } from "react";
 import useSWR from "swr";
 import { TextField } from "../components/TextField";
 import { Button } from "../components/Button";
 import { PlusIcon } from "../components/PlusIcon";
-import { fetchAsyncAuth } from "../lib/loginSlice";
+import {
+  editLogout,
+  fetchAsyncAuth,
+  selectIsLoggedIn,
+  selectLoginUser,
+} from "../lib/loginSlice";
 import { AppDispatch } from "../lib/store";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 export const getStaticProps: GetStaticProps = async () => {
   const allPostsData = await getSortedPostsData();
@@ -45,6 +51,9 @@ const initialState: POST_BLOG = {
 
 const Home: NextPage<Props> = ({ allPostsData }) => {
   const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const loginUser = useSelector(selectLoginUser);
 
   // ログイン済かチェックする
   useEffect(() => {
@@ -104,8 +113,17 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
       content: content,
     });
   };
+  // ログイン画面へ遷移する or ログオフ
+  const handleLogin: MouseEventHandler<HTMLButtonElement> = () => {
+    if (isLoggedIn) {
+      dispatch(editLogout());
+    } else {
+      router.push("/login");
+    }
+  };
+
   return (
-    <Layout home>
+    <Layout home name={loginUser.username}>
       <Head>…</Head>
       {inputForm ? (
         <div>
@@ -150,36 +168,53 @@ const Home: NextPage<Props> = ({ allPostsData }) => {
         </div>
       ) : (
         <div>
+          <div className={utilStyles.loginFrame}>
+            <Button onClick={handleLogin}>
+              {isLoggedIn ? "ログオフ" : "ログイン"}
+            </Button>
+          </div>
           <section className={utilStyles.headingMd}>…</section>
           <section
             className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}
           >
             <div className={utilStyles.listRow}>
               <h2 className={utilStyles.headingLg}>Blog</h2>
-              <PlusIcon
-                onClick={() => {
-                  setInputForm(true);
-                }}
-              />
+              {isLoggedIn ? (
+                <PlusIcon
+                  onClick={() => {
+                    setInputForm(true);
+                  }}
+                />
+              ) : null}
             </div>
             <ul className={utilStyles.list}>
               {filteredBlogs.map((blog) => (
                 <li className={utilStyles.listItem} key={blog.id}>
+                  {blog.username}
+                  <br />
                   <div className={utilStyles.listRow}>
                     <Link href={`/posts/${blog.id}`}>
                       <a>{blog.title}</a>
                     </Link>
                     <div className={utilStyles.icon}>
-                      <TrashIcon
-                        onClick={() => {
-                          handleDeleteClick(blog.id);
-                        }}
-                      />
-                      <UpdateIcon
-                        onClick={() => {
-                          handleUpdateForm(blog.id, blog.title, blog.content);
-                        }}
-                      />
+                      {isLoggedIn && blog.owner === loginUser.id ? (
+                        <>
+                          <TrashIcon
+                            onClick={() => {
+                              handleDeleteClick(blog.id);
+                            }}
+                          />
+                          <UpdateIcon
+                            onClick={() => {
+                              handleUpdateForm(
+                                blog.id,
+                                blog.title,
+                                blog.content
+                              );
+                            }}
+                          />
+                        </>
+                      ) : null}
                     </div>
                   </div>
                   <br />
