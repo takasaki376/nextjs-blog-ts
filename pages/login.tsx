@@ -9,15 +9,18 @@ import {
   fetchAsyncRegister,
   selectAuthen,
   selectErrorLogin,
+  selectIsLoading,
 } from "../lib/loginSlice";
 import { FormHTMLAttributes, InputHTMLAttributes, useState } from "react";
 import { useRouter } from "next/router";
+import { Loading } from "../components/Loading";
 
 const Login: NextPage = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
   const authen = useSelector(selectAuthen);
+  const isLoading = useSelector(selectIsLoading);
   const [isLoginView, setIsLoginView] = useState<boolean>(false);
 
   // ユーザ名 入力時
@@ -64,61 +67,66 @@ const Login: NextPage = () => {
     };
 
   return (
-    <div className={styles.root}>
-      <div className={styles.header}>
-        <div>
-          <img
-            className={styles.headerImg}
-            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
-            alt="Workflow"
-          />
-          <h2 className={styles.headerH2}>Sign in to your account</h2>
-        </div>
-      </div>
-
-      <form className={styles.form} onSubmit={handleLoginSubmit}>
-        <div className={styles.inputFrame}>
+    <>
+      <div className={styles.root}>
+        <div className={styles.header}>
           <div>
-            <label className={styles.label}>User Name</label>
-            <input
-              type="text"
-              required
-              className={styles.inputuser}
-              placeholder="User Name"
-              value={authen.username}
-              onChange={handleUsername}
-            />
-          </div>
-          <div>
-            <label className={styles.label}>Password</label>
-            <input
-              type="password"
-              required
-              className={styles.inputpassward}
-              placeholder="Password"
-              value={authen.password}
-              onChange={handlePassword}
+            <img
+              className={styles.headerImg}
+              src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+              alt="Workflow"
             />
             <h2 className={styles.headerH2}>Sign in to your account</h2>
           </div>
         </div>
 
-        <div className={styles.modeFrame}>
-          <div className={styles.textFrame}>
-            <button
-              className={styles.text}
-              onClick={() => {
-                setIsLoginView(!isLoginView);
-              }}
-            >
-              {isLoginView ? "ログイン画面へ戻る" : "アカウントを新規登録する"}
-            </button>
+        <form className={styles.form} onSubmit={handleLoginSubmit}>
+          <div className={styles.inputFrame}>
+            <div>
+              <label className={styles.label}>User Name</label>
+              <input
+                type="text"
+                required
+                className={styles.inputuser}
+                placeholder="User Name"
+                value={authen.username}
+                onChange={handleUsername}
+              />
+            </div>
+            <div>
+              <label className={styles.label}>Password</label>
+              <input
+                type="password"
+                required
+                className={styles.inputpassward}
+                placeholder="Password"
+                value={authen.password}
+                onChange={handlePassword}
+              />
+            </div>
           </div>
-          <div className={styles.textFrame}>
-            <button className={styles.text}>
-              パスワードを忘れた場合はこちら
-            </button>
+
+          <div className={styles.modeFrame}>
+            <div className={styles.textFrame}>
+              <button
+                type="button"
+                className={styles.text}
+                onClick={() => {
+                  setIsLoginView(!isLoginView);
+                }}
+              >
+                {isLoginView
+                  ? "ログイン画面へ戻る"
+                  : "アカウントを新規登録する"}
+              </button>
+            </div>
+            <div className={styles.textFrame}>
+              <button type="button" className={styles.text}>
+                パスワードを忘れた場合はこちら
+              </button>
+            </div>
           </div>
+<<<<<<< HEAD
         </div>
         <div>
           <button type="submit" className={styles.button}>
@@ -127,6 +135,18 @@ const Login: NextPage = () => {
         </div>
       </form>
     </div>
+=======
+
+          <div>
+            <button type="submit" className={styles.button}>
+              {isLoginView ? "新規登録" : "ログイン"}
+            </button>
+          </div>
+        </form>
+      </div>
+      <Loading open={isLoading} />
+    </>
+>>>>>>> 6b43450 (💄 ローディング画面追加)
   );
 };
 export default Login;
