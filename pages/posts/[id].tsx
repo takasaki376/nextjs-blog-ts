@@ -14,8 +14,6 @@ import { VFC } from "react";
 import useSWR from "swr";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
-import { selectLoginUser } from "../../lib/loginSlice";
 
 type Props = {
   postData: READ_BLOG | null;
@@ -43,8 +41,6 @@ export const getStaticPaths: GetStaticPaths<PathProps> = async () => {
 
 const Post: VFC<Props> = ({ postData }: Props) => {
   const router = useRouter();
-  const loginUser = useSelector(selectLoginUser);
-
   const { data: blog, mutate } = useSWR(
     `${apiUrl}${postData?.id}/`,
     blogGetPk,
@@ -60,7 +56,7 @@ const Post: VFC<Props> = ({ postData }: Props) => {
     return <div>Loading...</div>;
   }
   return (
-    <Layout name={loginUser.username}>
+    <Layout name={blog.username}>
       <Head>
         <title>{blog.title}</title>
       </Head>
