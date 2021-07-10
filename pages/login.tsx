@@ -126,16 +126,6 @@ const Login: NextPage = () => {
               </button>
             </div>
           </div>
-<<<<<<< HEAD
-        </div>
-        <div>
-          <button type="submit" className={styles.button}>
-            {isLoginView ? "新規登録" : "ログイン"}
-          </button>
-        </div>
-      </form>
-    </div>
-=======
 
           <div>
             <button type="submit" className={styles.button}>
@@ -146,7 +136,6 @@ const Login: NextPage = () => {
       </div>
       <Loading open={isLoading} />
     </>
->>>>>>> 6b43450 (💄 ローディング画面追加)
   );
 };
 export default Login;
