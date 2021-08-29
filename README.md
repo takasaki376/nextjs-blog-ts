@@ -107,8 +107,7 @@ const xxxSlice = createSlice({
 ```
 
 - createAsyncThunk : 非同期処理を定義する。
-- createSlice : slice を定義する。
-  -
+- ## createSlice : slice を定義する。
 
 ## store の作成 (今回は /lib/store.ts を作成する )
 
@@ -124,3 +123,7 @@ store を追加する。
 
 - useSelector : store に定義されている状態を参照する際に使用する。
 - useDispatch : store に定義されている状態を変更する際に使用する。具体的には reducers に定義している処理を呼びだす。
+
+## blogApi.ts 修正
+
+API にトークン送信するように修正する
